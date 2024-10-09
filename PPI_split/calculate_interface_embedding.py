@@ -54,20 +54,18 @@ def create_pdb_path(inputs):
 
 def get_csr_data(G:nx.Graph):
     edges = [(i, j, G.adj[i][j]['weight']) for i,j in G.edges()]
-    edgesList = edges + [(j, i, w) for i, j, w in edges]# 链路有两种形式 12 21 这里手动复制一份
+    edgesList = edges + [(j, i, w) for i, j, w in edges]
     cmp = lambda t1,t2 : t1[1]-t2[1] if t1[0]==t2[0] else t1[0]-t2[0]
-    edgesList.sort(key = cmp_to_key(cmp)) # 按照元组前两个元素大小排下序
+    edgesList.sort(key = cmp_to_key(cmp)) 
     adjncy = [j for i,j,w in edgesList]
     eweights = [w for i,j,w in edgesList]
-    xadj, xid = [0, ], 0 # 注意 xadj必须按照 节点 [0, n) 顺序读取，如果该节点不存在链路则新id下标不变
+    xadj, xid = [0, ], 0 
     if not edgesList is []:
         for i in range(1, len(edgesList)):
             while xid < edgesList[i][0]:
                 xadj.append(i)
                 xid += 1
-            # if edgesList[i-1][0] != edgesList[i][0]: # 这样会遗漏没有链路的节点
-            #     xadj.append(i)
-        xadj.append(len(edgesList)) #len(adj) == len(edgesList)+1
+        xadj.append(len(edgesList)) 
     return (xadj, adjncy, eweights)
 
 
