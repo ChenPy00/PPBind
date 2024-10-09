@@ -8,4 +8,6 @@ __pycache__/
 **.pt
 **.ipynb
 benchmark_data/*
+!benchmark_data
 PPBind/*
+!PPBind/.gitkeep
