@@ -7,4 +7,5 @@ __pycache__/
 **/.pt
 **.pt
 **.ipynb
-benchmark_data/
+benchmark_data/*
+PPBind/*
