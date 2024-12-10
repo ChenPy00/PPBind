@@ -40,8 +40,8 @@ def mutstr_transform(mutstr):
     After conversion, the composition of mutstr is: RC89P represents the transformation from R to P at position 89 on the C chain
     '''
     if type(mutstr)==str:
-        mutstr=mutstr.replace('_', '')
-        mutstr = mutstr[1]+mutstr[0]+mutstr[2:]
+        mutstr=mutstr.replace('_', '').replace(" ",'')
+        mutstr = ','.join([m[1]+m[0]+m[2:] for m in mutstr.split(',')])
     else:
         pass
     return mutstr
