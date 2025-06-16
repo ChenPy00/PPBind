@@ -1,0 +1,74 @@
+model:
+  network: seq
+  encoder:
+    node_feat_dim: 128
+  num_classes: 3
+  convert_num: 2
+  class_dir:
+    - 1
+    - -1
+    - -1
+  seq_encoder:
+    hidden_size: 128
+    num_attention_heads: 8
+    num_hidden_layers: 4
+  align: True
+  version: 3
+
+data:
+  reset: False
+  strict: False
+  l2andr2: True
+  finetune: True
+  split_seed: 2024
+  summary_filepath: /raid/peiyi/antibody/Affinity/paper2-PPdG/benchmark_pbadAS_pbadSA_dipsP_20240911.csv
+  pkl_cache_dir: /raid/peiyi/antibody/Affinity/paper2-PPdG/PPdG_reslis_CPY/cache_data/benchmark_pbadAS_pbadSA_dipsP_20240901
+  cache_dir: /raid/peiyi/antibody/Affinity/paper2-PPdG/PPdG_reslis_CPY/cache_data/benchmark_pbadAS_pbadSA_dipsP_20240901/pt
+  logdir: ./logs/纯序列模型finetune结果_数据集v1.2_202408
+  transform:
+    train:
+    - type: select_atom
+      resolution: full
+    - type: randomly_swap_receptor_ligand
+      rate: 0.5
+    - type: selected_region_seperated_fixed_size_excludeAA+ESM_patch
+      select_attr: itf_flag
+      patch_size: 64
+    val:
+    - type: select_atom
+      resolution: full
+    - type: selected_region_seperated_fixed_size_excludeAA+ESM_patch
+      select_attr: itf_flag
+      patch_size: 64
+  label_type:
+    - dG
+    - log2er
+    - Nkd
+  blocklist:
+    - 4R8I
+    - 1FYT
+  collate: mix
+
+
+train:
+  loss_weights:
+    regression: 1.0
+    similar: 1.0
+    regular: 1.0
+  num_cvfolds: 1
+  max_iters: 360_000
+  val_freq: 2000
+  batch_size: 16
+  seed: 2024
+  max_grad_norm: 100.0
+  optimizer:
+    type: adam
+    lr: 1.e-4
+    weight_decay: 0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 2
+    min_lr: 1.e-6

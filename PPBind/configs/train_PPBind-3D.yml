@@ -1,0 +1,76 @@
+model:
+  network: structure
+  rde_checkpoint: ./trained_models/RDE.pt
+  encoder:
+    node_feat_dim: 128
+    pair_feat_dim: 64
+    num_layers: 2
+  num_classes: 3
+  convert_num: 2
+  class_dir:
+    - 1
+    - -1
+    - -1
+  max_num_atoms: 15
+  twotrack: False
+
+data:
+  reset: False
+  strict: True
+  l2andr2: False
+  finetune: False
+  split_seed: 2024 
+  summary_filepath: ../PPBind-3D_example_data.csv
+  pkl_cache_dir: ./cache_data/PPBind-3D_example_data
+  cache_dir: ./cache_data/PPBind-3D_example_data/pt
+  logdir: ./logs/train_PPBind-3D
+  transform:
+    train:
+    - type: select_atom
+      resolution: full
+    - type: add_atom_noise
+    - type: add_chi_angle_noise
+    - type: randomly_swap_receptor_ligand
+      rate: 0.5
+    - type: selected_region_seperated_fixed_size_patch
+      select_attr: itf_flag
+      patch_size: 64
+    val:
+    - type: select_atom
+      resolution: full
+    - type: selected_region_seperated_fixed_size_patch
+      select_attr: itf_flag
+      patch_size: 64
+  label_type:
+    - dG
+    - log2er
+    - Nkd
+  blocklist:
+    - 4R8I
+    - 1FYT
+  collate: str
+
+train:
+  mixed_precision_training: False
+  dataparallel: False
+  loss_weights:
+    regression: 1.0
+    kernel: 0.5
+    regular: 1.0
+  num_cvfolds: 5
+  max_iters: 100_000
+  val_freq: 2000
+  batch_size: 16
+  seed: 2024
+  max_grad_norm: 100.0
+  optimizer:
+    type: adam
+    lr: 1.e-4
+    weight_decay: 0.001 # 0
+    beta1: 0.9
+    beta2: 0.999
+  scheduler:
+    type: plateau
+    factor: 0.5
+    patience: 2
+    min_lr: 1.e-6

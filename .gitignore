@@ -1,5 +1,4 @@
 *.pkl
-*.csv
 **/__pycache__/
 __pycache__/
 .ipynb_checkpoints/
@@ -9,5 +8,10 @@ __pycache__/
 **.ipynb
 benchmark_data/*
 !benchmark_data/.gitkeep
-PPBind/*
-!PPBind/.gitkeep
+PPBind/cache_data/*
+!PPBind/cache_data/.gitkeep
+PPBind/trained_models/*
+!PPBind/trained_models/.gitkeep
+
+
+

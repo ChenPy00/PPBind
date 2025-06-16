@@ -1,0 +1,23 @@
+,source,pdb,mutstr,ligand,receptor,KD(M),Subgroup,dG,pdb_path,PP_ID,log2er,Nkd
+0,SKEMPI v2.0,1A22,,A,B,9e-10,,-12.339961001338123,The_absolute_path_of_PDB/benchmark_data/PDB/SKEMPI v2.0/1A22.pdb,3.0,,
+1,SKEMPI v2.0,1A4Y,,A,B,5e-16,,-20.87322301353176,The_absolute_path_of_PDB/benchmark_data/PDB/SKEMPI v2.0/1A4Y.pdb,0.0,,
+2,SKEMPI v2.0,1ACB,,E,I,1.49e-12,,-16.13379756976405,The_absolute_path_of_PDB/benchmark_data/PDB/SKEMPI v2.0/1ACB.pdb,0.0,,
+3,SKEMPI v2.0,1AHW,,"A, B",C,3.4e-09,,-11.552511772701864,The_absolute_path_of_PDB/benchmark_data/PDB/SKEMPI v2.0/1AHW.pdb,0.0,,
+4,SKEMPI v2.0,1AK4,,A,D,1.2e-05,,-6.712838762457455,The_absolute_path_of_PDB/benchmark_data/PDB/SKEMPI v2.0/1AK4.pdb,0.0,,
+9425,PDBbind v2020,4IHH,,"I, J, K","D, E, F",5.9e-08,,-9.861794807380871,The_absolute_path_of_PDB/benchmark_data/PDB/PDBbind v2020/4ihh.ent.pdb,0.0,,
+9426,PDBbind v2020,4IHL,,P,"A, B",3.46e-07,,-8.813805704686079,The_absolute_path_of_PDB/benchmark_data/PDB/PDBbind v2020/4ihl.ent.pdb,0.0,,
+9427,PDBbind v2020,4IIQ,,C,"A, B",3.1e-05,TCR-pMHC,-6.1505541050908485,The_absolute_path_of_PDB/benchmark_data/PDB/PDBbind v2020/4iiq.ent.pdb,4.0,,
+9428,PDBbind v2020,4IJ3,,"B, C",A,9e-10,,-12.339961001338123,The_absolute_path_of_PDB/benchmark_data/PDB/PDBbind v2020/4ij3.ent.pdb,0.0,,
+12573,pbad-sa,7ekf,CB432H,B,A,,,,The_absolute_path_of_PDB/extra_data/PBAD-SA/7ekf.pdb,5.0,,6.05044
+12574,pbad-sa,7ekf,CB432I,B,A,,,,The_absolute_path_of_PDB/extra_data/PBAD-SA/7ekf.pdb,5.0,,9.4247
+12575,pbad-sa,7ekf,CB432K,B,A,,,,The_absolute_path_of_PDB/extra_data/PBAD-SA/7ekf.pdb,5.0,,7.24273
+12576,pbad-sa,7ekf,CB432L,B,A,,,,The_absolute_path_of_PDB/extra_data/PBAD-SA/7ekf.pdb,5.0,,9.06803
+22670,pbad-as,6m17be,QB325A,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,-0.2493967895,
+22671,pbad-as,6m17be,QB325C,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,-0.5835330135,
+22672,pbad-as,6m17be,QB325D,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,-0.635217943,
+22673,pbad-as,6m17be,QB325E,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,0.071162939,
+22674,pbad-as,6m17be,QB325F,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,-0.0975316074999999,
+22675,pbad-as,6m17be,QB325G,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,0.2892725945,
+22676,pbad-as,6m17be,QB325H,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,0.362784364,
+22677,pbad-as,6m17be,QB325I,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,-0.0167805755,
+22678,pbad-as,6m17be,QB325K,B,E,,,,The_absolute_path_of_PDB/extra_data/PBAD-AS/6m17be.pdb,6.0,0.078502993,
