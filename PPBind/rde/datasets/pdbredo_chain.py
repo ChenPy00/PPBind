@@ -308,18 +308,3 @@ def get_pdbredo_chain_dataset(cfg):
         processed_dir = cfg.processed_dir,
         transform = get_transform(cfg.transform),
     )
-
-
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--split', type=str, default='train')
-    args = parser.parse_args()
-
-    dataset = PDBRedoChainDataset(args.split)
-
-    for data in tqdm(dataset, desc='Iterating'):
-        pass
-    print(data)
-    print(f'[INFO] {len(dataset.clusters)} clusters in the entire dataset.')
-    print(f'[INFO] {len(dataset)} samples in the split.')

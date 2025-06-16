@@ -64,17 +64,11 @@ class ResiduePairEncoder(nn.Module):
 
         # Distances
         d = angstrom_to_nm(torch.linalg.norm(
-            # 原版
-            #pos_atoms[:,:,None,:,None] - pos_atoms[:,None,:,None,:],
-            # LHQ改版
             pos_atoms[:,:,None,:self.max_num_atoms,None] - pos_atoms[:,None,:,None,:self.max_num_atoms],
             dim = -1, ord = 2,
         )).reshape(N, L, L, -1) # (N, L, L, A*A)
         c = F.softplus(self.aapair_to_distcoef(aa_pair))    # (N, L, L, A*A)
         d_gauss = torch.exp(-1 * c * d**2)
-        # 原版
-        # mask_atom_pair = (mask_atoms[:,:,None,:,None] * mask_atoms[:,None,:,None,:]).reshape(N, L, L, -1)
-        # LHQ改版
         mask_atom_pair = (mask_atoms[:,:,None,:self.max_num_atoms,None] * mask_atoms[:,None,:,None,:self.max_num_atoms]).reshape(N, L, L, -1)
         feat_dist = self.distance_embed(d_gauss * mask_atom_pair)
 
@@ -150,21 +144,11 @@ class ResiduePairEncoder_rsaa(nn.Module):
 
         # Distances
         d = angstrom_to_nm(torch.linalg.norm(
-            # 原版
-            #pos_atoms[:,:,None,:,None] - pos_atoms[:,None,:,None,:],
-            # LHQ改版
             pos_atoms[:,:,None,:self.max_num_atoms,None] - pos_atoms[:,None,:,None,:self.max_num_atoms],
             dim = -1, ord = 2,
         )).reshape(N, L, L, -1) # (N, L, L, Atom*Atom)
-#         # 原版
-#         c = F.softplus(self.aapair_to_distcoef(aa_pair))    # (N, L, L, A*A)
-#         d_gauss = torch.exp(-1 * c * d**2)
-        # LHQ改版
         d_gauss = torch.exp(-1 * d**2)
-        
-        # 原版
-        # mask_atom_pair = (mask_atoms[:,:,None,:,None] * mask_atoms[:,None,:,None,:]).reshape(N, L, L, -1)
-        # LHQ改版
+
         mask_atom_pair = (mask_atoms[:,:,None,:self.max_num_atoms,None] * mask_atoms[:,None,:,None,:self.max_num_atoms]).reshape(N, L, L, -1)
         feat_dist = self.distance_embed(d_gauss * mask_atom_pair)
 
@@ -174,9 +158,6 @@ class ResiduePairEncoder_rsaa(nn.Module):
         
         # RSAA-pair
         rsaa_diff = rsaa[:, :, None] - rsaa[:,None,:]
-#         # 原版
-#         rsaa_prod = rsaa[:, :, None] * rsaa[:,None,:]
-        # LHQ改版
         rsaa_prod = rsaa[:, :, None] + rsaa[:,None,:]
         rsaa_pair = torch.cat([rsaa_diff[..., None],  rsaa_prod[..., None]], dim=-1)
         feat_rsaa_pair = self.rsaa_embed(rsaa_pair[..., None])   # (N, L, L, 1, feat)
@@ -247,14 +228,6 @@ class ResidueCrossPairEncoder_rsaa(nn.Module):
         # Pair identities
         aa_pair = aa_q[:,:,None]*self.max_aa_types + aa_kv[:,None,:]# (N, L_q, L_kv)
         feat_aapair = self.aa_pair_embed(aa_pair)
-    
-#         # Relative positions
-#         same_chain = (chain_nb[:, :, None] == chain_nb[:, None, :])
-#         relpos = torch.clamp(
-#             res_nb[:,:,None] - res_nb[:,None,:], 
-#             min=-self.max_relpos, max=self.max_relpos,
-#         )   # (N, L, L)
-#         feat_relpos = self.relpos_embed(relpos + self.max_relpos) * same_chain[:,:,:,None]
 
         # Distances
         d = angstrom_to_nm(torch.linalg.norm(
@@ -263,16 +236,9 @@ class ResidueCrossPairEncoder_rsaa(nn.Module):
             # LHQ改版
             pos_atoms_q[:,:,None,:self.max_num_atoms,None] - pos_atoms_kv[:,None,:,None,:self.max_num_atoms],
             dim = -1, ord = 2,
-        )).reshape(N, L_q, L_kv, -1) # (N, L_q, L_kv, A*A)，其中A表示Atom
-#         # 原版
-#         c = F.softplus(self.aapair_to_distcoef(aa_pair)) # (N, L_q, L_kv, A*A) # LHQ: aapair_to_distcoef有些奇怪, 稍后深究
-#         d_gauss = torch.exp(-1 * c * d**2)
-        # LHQ改版
+        )).reshape(N, L_q, L_kv, -1) # (N, L_q, L_kv, A*A)
         d_gauss = torch.exp(-1 * d**2)
-        
-        # 原版
-        # mask_atom_pair = (mask_atoms[:,:,None,:,None] * mask_atoms[:,None,:,None,:]).reshape(N, L, L, -1)
-        # LHQ改版
+
         mask_atom_pair = (mask_atoms_q[:,:,None,:self.max_num_atoms,None] * mask_atoms_kv[:,None,:,None,:self.max_num_atoms]).reshape(N, L_q, L_kv, -1)
         feat_dist = self.distance_embed(d_gauss * mask_atom_pair)# (N, L_q, L_kv, A*A) * (N, L_q, L_kv, A*A)
 
@@ -281,15 +247,15 @@ class ResidueCrossPairEncoder_rsaa(nn.Module):
         feat_dihed = self.dihedral_embed(dihed)
         
         # RSAA-pair
-        rsaa_diff = rsaa_q[:, :, None] - rsaa_kv[:,None,:]# LHQ: 一个减法，一个乘法，挺奇怪的设计。 后续深究
-        rsaa_prod = rsaa_q[:, :, None] + rsaa_kv[:,None,:]# 原版： * ；  LHQ改版：+
+        rsaa_diff = rsaa_q[:, :, None] - rsaa_kv[:,None,:]
+        rsaa_prod = rsaa_q[:, :, None] + rsaa_kv[:,None,:]
         rsaa_pair = torch.cat([rsaa_diff[..., None],  rsaa_prod[..., None]], dim=-1)
         feat_rsaa_pair = self.rsaa_embed(rsaa_pair[..., None])   # (N, L_q, L_kv, 1, feat)
         feat_rsaa_pair = feat_rsaa_pair.reshape(N, L_q, L_kv, -1) 
         feat_rsaa_pair =  feat_rsaa_pair * rsaa_mask_pair[..., None]
 
         # All
-        feat_all = torch.cat([feat_aapair, feat_dist, feat_dihed, feat_rsaa_pair], dim=-1)# , feat_relpos
+        feat_all = torch.cat([feat_aapair, feat_dist, feat_dihed, feat_rsaa_pair], dim=-1)
         feat_all = self.out_mlp(feat_all) # (N, L_q, L_kv, F)
         feat_all = feat_all * mask_pair[:, :, :, None]
 

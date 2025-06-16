@@ -8,7 +8,6 @@ from rde.utils.protein.constants import BBHeavyAtom
 from rde.utils.protein.constants import AAindex1_matrix, AAindex1_matrix_dim
 
 
-# RDE原本的代码
 class PerResidueEncoder(nn.Module):
 
     def __init__(self, feat_dim, max_num_atoms, max_aa_types=22):
@@ -57,8 +56,6 @@ class PerResidueEncoder(nn.Module):
         return out_feat
 
 
-# 新代码 2024 04 02
-# 新增索引aaindex1的特征，形成aa_index_feat (Batch_size, Length, channel=566)
 class PerResidueEncoder_aaindex1(nn.Module):
 
     def __init__(self, feat_dim, max_num_atoms, max_aa_types=22):
@@ -93,19 +90,12 @@ class PerResidueEncoder_aaindex1(nn.Module):
 
         # Based on AAindex1 index features
         aaindex1_matrix = AAindex1_matrix.to(aa.device)
-        
-        # 我们将aa_matrix从(21, aaindex1_feat_dim)扩展到(N, 21, aaindex1_feat_dim)
         aaindex1_matrix_expanded = aaindex1_matrix.unsqueeze(0).expand(aa.size(0), -1, -1)
-
-        # 接下来，我们需要扩展aa以便它有一个额外的维度来匹配aa_matrix_expanded
-        # 我们将aa从(N, L)扩展到(N, L, 1)
         aa_expanded = aa.unsqueeze(-1).expand(-1, -1, aaindex1_matrix.size(-1))
 
-        # 现在我们可以使用torch.gather来获取索引
         aaindex1_feat = torch.gather(aaindex1_matrix_expanded, 1, aa_expanded)  # (N, L, aaindex1_feat_dim) 
         aaindex1_feat = self.aaindex1_embed(aaindex1_feat)  # (N, L, feat) 
-        
-        # nn.embedding 与 aaindex1 embedding相加形成最终aa_feat
+
         aa_feat = aa_feat + aaindex1_feat
         
         # 计算rsaa feature

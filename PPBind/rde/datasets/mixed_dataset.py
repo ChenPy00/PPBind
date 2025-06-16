@@ -195,12 +195,11 @@ class MixedDataset(Dataset):
         if 'has_itf' in self.entries_full[0]:
             self.entries_full = [e for e in self.entries_full if e['has_itf']]
         
-#         # 筛选r2l2(受体不超过两条链，配体也不超过两条链)
+        # Filter r2l2 (receptor no more than 2 chains, ligand no more than 2 chains)
         if self.l2andr2:
             self.entries_full = [e for e in self.entries_full if e['l2andr2']]
-            
 
-        # 筛选目标label_type
+        # Filter target label types
         label_index = [self.label_type_2_index[i] for i in self.label_type]
         index_keep = []
         
@@ -212,8 +211,7 @@ class MixedDataset(Dataset):
                     index_keep.append(i)
             self.entries_full = [self.entries_full[i] for i in index_keep]
 
-        
-        # 分离dG样本和非dG的样本（仅参与训练）
+        # Separate dG samples and non-dG samples (only for training)
         index_cv = []
         index_only_train = []
         for i,entry in enumerate(self.entries_full):
@@ -224,7 +222,7 @@ class MixedDataset(Dataset):
         self.entries_cv = [self.entries_full[i] for i in index_cv] 
         self.entries_only_train = [self.entries_full[i] for i in index_only_train] 
 
-        # 严格划分数据
+        # Strict data splitting
         if self.strict:
             complex_to_entries = {}
             for e in self.entries_full:
@@ -271,7 +269,7 @@ class MixedDataset(Dataset):
             
             self.entries = entries
         
-        # 不严格划分数据
+        # Non-strict data splitting
         else:
             complex_to_entries = {}
             for e in self.entries_full:
@@ -282,16 +280,16 @@ class MixedDataset(Dataset):
             all_complex_list = sorted(complex_to_entries.keys())
 #             all_complex_list = [complex for complex in all_complex_list if complex not in self.pass_pdb]
             
-            # pop only-train-pdb 剔除非dG样本
+            # pop only-train-pdb
             complex_list = [complex for complex in all_complex_list if complex not in self.only_train_pdb]
             only_train_complex_list = [complex for complex in all_complex_list if complex in self.only_train_pdb]
             
-            entries = []  # 所有dG样本
+            entries = []  # All dG samples
             for cplx in complex_list:
                 entries += complex_to_entries[cplx]
             random.Random(self.split_seed).shuffle(entries)
             
-            only_train_entries = []  # 所有非dG样本
+            only_train_entries = []  # All non-dG samples
             for cplx in only_train_complex_list:
                 only_train_entries += complex_to_entries[cplx]
             random.Random(self.split_seed).shuffle(only_train_entries)
@@ -318,7 +316,8 @@ class MixedDataset(Dataset):
                 entries = val_split
             else:
                 entries = train_split
-            # 筛选r2l2(受体不超过两条链，配体也不超过两条链)
+
+            # Filter r2l2 (receptor no more than 2 chains, ligand no more than 2 chains)
             if self.l2andr2:
                 entries = [e for e in entries if e['l2andr2']]
             
@@ -384,7 +383,6 @@ class MixedDataset(Dataset):
         assert os.path.exists(cache_file), f"Error: file not found {cache_file}"
         data = torch.load(cache_file)
 
-        # 挑选目标label_type的标签
         label_index = [self.label_type_2_index[i] for i in self.label_type]
         data['labels'] = data['labels'][label_index]
         data['labels_mask'] = data['labels_mask'][label_index]
@@ -393,25 +391,3 @@ class MixedDataset(Dataset):
         if self.transform is not None:
             data = self.transform(data)
         return data
-# -
-if __name__=='__main__':
-    import tqdm
-    import argparse
-    import sys
-    sys.path.append('../../')
-    from rde.utils.misc import load_config
-    from rde.utils.transforms import get_transform
-    
-    config, config_name = load_config(config_path='../../configs/train/PPdG_train_on_str.yml')
-    dataset = MixedDataset(
-        summary_filepath=config.data.summary_filepath,
-        pkl_cache_dir=config.data.pkl_cache_dir,
-        cache_dir=config.data.cache_dir,
-        num_cvfolds=5,
-        cvfold_index=1,
-        split='train', 
-        strict=config.data.strict,
-        split_seed=config.data.split_seed,
-        blocklist=config.data.blocklist,
-        transform=get_transform(config.data.transform.train)
-    )

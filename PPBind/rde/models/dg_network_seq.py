@@ -118,18 +118,8 @@ class NetworkSeq(nn.Module):
     
     
     def forward(self, batch):
-#         # v0
-#         X = self.encode(batch)
-
-#         # v1
-#         x_rec, x_lig = self.encode(batch)
-#         X_rec = x_rec.max(dim=1)[0]  # 合理?(N, L, C) -> (N, C)
-#         X_lig = x_lig.max(dim=1)[0]  # 合理?(N, L, C) -> (N, C)
-#         X = X_rec + X_lig
-        
-        # v2
         x_rec, x_lig = self.encode(batch)
-        X = x_lig.max(dim=1)[0]  # 合理?(N, L, C) -> (N, C)
+        X = x_lig.max(dim=1)[0]
         
         preds = self.predictor(X).squeeze(-1)
         

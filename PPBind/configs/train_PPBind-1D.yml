@@ -21,10 +21,10 @@ data:
   l2andr2: True
   finetune: True
   split_seed: 2024
-  summary_filepath: /raid/peiyi/antibody/Affinity/paper2-PPdG/benchmark_pbadAS_pbadSA_dipsP_20240911.csv
-  pkl_cache_dir: /raid/peiyi/antibody/Affinity/paper2-PPdG/PPdG_reslis_CPY/cache_data/benchmark_pbadAS_pbadSA_dipsP_20240901
-  cache_dir: /raid/peiyi/antibody/Affinity/paper2-PPdG/PPdG_reslis_CPY/cache_data/benchmark_pbadAS_pbadSA_dipsP_20240901/pt
-  logdir: ./logs/纯序列模型finetune结果_数据集v1.2_202408
+  summary_filepath: ../PPBind-1D_example_data.csv
+  pkl_cache_dir: ./cache_data/PPBind-1D_example_data
+  cache_dir: ./cache_data/PPBind-1D_example_data/pt
+  logdir: ./logs/train_PPBind-3D
   transform:
     train:
     - type: select_atom

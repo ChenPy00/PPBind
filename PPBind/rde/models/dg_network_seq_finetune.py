@@ -37,9 +37,8 @@ class NetworkSeqAlign(nn.Module):
             for name, param in self.struc_model.predictor.named_parameters():
                 param.requires_grad = True
         
-        # encoder模块
+        # encoder
         self.aa_embedding = nn.Embedding(22, cfg.encoder.node_feat_dim)
-        # 交叉注意力模块
         self.seq_fusion = nn.ModuleList([Cross_attention(cfg.seq_encoder) for _ in range(cfg.seq_encoder.num_hidden_layers)])
         self.mlp = nn.Linear(cfg.encoder.node_feat_dim, cfg.encoder.node_feat_dim)
         self.esm_trans_layers = nn.Sequential(
@@ -57,7 +56,7 @@ class NetworkSeqAlign(nn.Module):
         )
         self.norm = LayerNorm(cfg.encoder.node_feat_dim)
         
-        # prediction head模块
+        # prediction head
         if self.align:
             self.predictor = nn.Sequential(
                 nn.Linear(cfg.encoder.node_feat_dim, cfg.encoder.node_feat_dim), nn.ReLU(),
