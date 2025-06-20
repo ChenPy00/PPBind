@@ -1,4 +1,4 @@
-# 1.Prepare pre-training data
+# 1. Prepare pre-training data
 
 ## download data
 
@@ -16,7 +16,7 @@ python calculate_interface_embedding.py
 run ./extra_data/integrate.ipynb
 ```
 
-# 2.PPBind-3D(Updating in progress）
+# 2. PPBind-3D(Updating in progress）
 ```shell
 cd PPBind
 # process data
@@ -28,7 +28,7 @@ python 1-0.preprocess_PPBind3D-dataset.py \
 python 1-1.train.py --config ./configs/train_PPBind-3D.yml --num_workers 4
 ```
 
-# 3.Prepare data for fine-tuning
+# 3. Prepare data for fine-tuning
 ```
 cd finetune_data_DIPS-Plus
 ```
@@ -64,7 +64,7 @@ gunzip *.gz
 python ./finetune_dataset_integrate.py
 ```
 
-# 4.PPBind-1D(Updating in progress）
+# 4. PPBind-1D(Updating in progress）
 ```shell
 cd PPBind
 # process data
@@ -76,3 +76,6 @@ python 2-0.preprocess_PPBind1D-dataset.py \
 python 2-1.train.py --config ./configs/train_PPBind-1D.yml --num_workers 4
 ```
 
+# 5. Trained Model
+
+You can download trained weight from [Hugging Face](https://huggingface.co/ChenPy00/PPBind)
